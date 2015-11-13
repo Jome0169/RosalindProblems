@@ -31,22 +31,19 @@ d = {'UUU':'F', 'CUC':'L','AUC':'I','GUC':'V',
 
 
 with open("rosalind_orf.txt", 'r') as Z:
-    
     DNA1 = Z.read()
-    DNA = DNA1[:-1]
-
-print len(DNA) % 3
-
+    DNA = DNA1.replace("\n", '')
 ReverseDNA = Seq(DNA, generic_dna)
 FinalReverse = str(ReverseDNA.reverse_complement())
 
 FinalizedProt = []
 
 def ReadingFrameFinder(DNASTRING):
+    CleanDNA = DNASTRING.rstrip("\n")
     OpenLocations = []
     CloseLocations = []
-    stringlen = len(DNASTRING)
-    TtoU = DNASTRING.replace("T", 'U')
+    stringlen = len(CleanDNA)
+    TtoU = CleanDNA.replace("T", 'U')
     readingframeRange = xrange(0, stringlen)
     PossibleGenes = []
     for item in readingframeRange:
@@ -62,14 +59,17 @@ def ReadingFrameFinder(DNASTRING):
             LETGO = Seq(Seqeu, generic_rna)
             FinalizedProt.append(str(LETGO.translate()))
         else:
-            print "Keep Going"
+            Removal_Len = len(Seqeu) % 3
+            UpdatedSequence = Seqeu[:-Removal_Len]
+            ETGO2 = Seq(UpdatedSequence, generic_rna)
+            FinalizedProt.append(str(ETGO2.translate()))
+
 
 
 def FileWriter(ListOfProt):
     FinalizedProt = set(ListOfProt)
     with open('ProtSeq.txt', 'w') as f:
         for item in FinalizedProt:
-
             Cutitem = item.replace("*", '')
             f.write(Cutitem)
             f.write("\n")
